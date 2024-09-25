@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Number Guessing Game</title>
+<link rel="stylesheet" href="styles.css">
+<script src="randominteger.js"></script>
+</head>
+<body>
+<div id="game-container">
+    <h1>Number Guessing Game</h1>
+    <p>Try to guess the number between 1 and 100 in 10 turns or less.</p>
+    <input type="number" id="guessInput" placeholder="Enter your guess">
+    <button onclick="playGame()">Submit Guess</button>
+    <div id="feedback"></div>
+    <div id="previousGuesses"></div>
+    <button id="playAgainButton" style="display:none;" onclick="resetGame()">Play Again</button>
+</div>
+<script>
+let secretNumber = randomInt();
+let attempts = 0;
+let previousGuesses = [];
+
+function playGame() {
+    const guess = parseInt(document.getElementById('guessInput').value, 10);
+    if (isNaN(guess)) {
+        document.getElementById('feedback').innerText = "Please enter a valid number.";
+        return;
+    }
+
+    attempts++;
+    previousGuesses.push(guess);
+    document.getElementById('previousGuesses').innerText = `Previous guesses: ${previousGuesses.join(', ')}`;
+
+    if (guess === secretNumber) {
+        document.getElementById('feedback').innerText = `Correct! The number was ${secretNumber}. You got it in ${attempts} tries.`;
+        showPlayAgainButton();
+    } else if (attempts >= 10) {
+        document.getElementById('feedback').innerText = `Game Over! The number was ${secretNumber}.`;
+        showPlayAgainButton();
+    } else {
+        const message = guess < secretNumber ? "Too low!" : "Too high!";
+        document.getElementById('feedback').innerText = `${message}`;
+    }
+}
+
+function resetGame() {
+    secretNumber = randomInt();
+    attempts = 0;
+    previousGuesses.length = 0;
+    document.getElementById('guessInput').value = '';
+    document.getElementById('feedback').innerText = '';
+    document.getElementById('previousGuesses').innerText = '';
+    document.getElementById('playAgainButton').style.display = 'none';
+}
+
+function showPlayAgainButton() {
+    document.getElementById('playAgainButton').style.display = 'block';
+}
+</script>
+</body>
+</html>
